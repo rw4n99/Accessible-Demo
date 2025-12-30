@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Accessible Shop - WCAG 2.1</title>
+    <title>SNEAKER_PRO | Accessible Store</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="accessible">
-    <a href="#main" class="sr-only" onfocus="this.className='btn'" style="position:absolute; top:10px; left:10px; z-index:1000;">Skip to content</a>
+    <a href="#main" class="sr-only" onfocus="this.className='btn'" style="width:auto; position:absolute; top:1rem; left:1rem; z-index:1001;">Skip to content</a>
 
     <header class="header">
-        <div class="logo"><strong>SNEAKER_PRO</strong></div>
-        <nav aria-label="Main">
+        <div class="logo">SNEAKER_PRO</div>
+        <nav aria-label="Main Navigation">
             <button id="cart-trigger" class="nav-item" aria-haspopup="dialog" aria-expanded="false">
                 Cart <span id="cart-val" aria-live="polite">(0) - $0</span>
             </button>
@@ -20,13 +20,13 @@
     <div id="announcer" class="sr-only" aria-live="assertive"></div>
 
     <main id="main">
-        <section class="banner-container" aria-roledescription="carousel" aria-label="Featured Items">
-            <button id="pause-btn" class="btn" style="position:absolute; bottom:10px; right:10px; z-index:10; width:auto;">Pause</button>
-            <div class="banner-slide active" role="group" aria-roledescription="slide" aria-label="1 of 2" style="background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=800')">
-                <h2>SUMMER SALE</h2>
+        <section class="banner-container" aria-roledescription="carousel" aria-label="Featured Promotions">
+            <button id="pause-btn" class="btn" style="position:absolute; bottom:1rem; right:2rem; width:auto; z-index:10;">Pause</button>
+            <div class="banner-slide active" role="group" aria-roledescription="slide" aria-label="1 of 2" style="background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=1000')">
+                <h2>SPRING SALE</h2>
             </div>
-            <div class="banner-slide" role="group" aria-roledescription="slide" aria-label="2 of 2" style="background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800')">
-                <h2>NEW ARRIVALS</h2>
+            <div class="banner-slide" role="group" aria-roledescription="slide" aria-label="2 of 2" style="background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1552346154-21d32810aba3?w=1000')">
+                <h2>NEW DROPS</h2>
             </div>
         </section>
 
@@ -35,33 +35,62 @@
             <button id="list-btn" class="btn" style="width:auto;" aria-pressed="false">List View</button>
         </div>
 
-        <section id="product-grid" class="grid" aria-label="Products"></section>
+        <section id="product-grid" class="grid" aria-label="Product Gallery"></section>
     </main>
 
-    <aside id="good-cart" class="cart-sidebar" role="dialog" aria-modal="true" aria-labelledby="ct" hidden>
-        <button id="c-close" class="close-btn" aria-label="Close cart">×</button>
-        <h2 id="ct">Shopping Cart</h2>
+    <footer role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4 id="support-heading">Customer Support</h4>
+                <ul class="footer-links" aria-labelledby="support-heading">
+                    <li><a href="#">Shipping & Returns Policy</a></li>
+                    <li><a href="#">Privacy Commitment</a></li>
+                </ul>
+            </div>
+            <nav aria-label="Social Media Connections">
+                <div class="social-icons">
+                    <a href="#" aria-label="Follow us on Facebook">FB</a>
+                    <a href="#" aria-label="Follow us on Instagram">IG</a>
+                </div>
+            </nav>
+        </div>
+    </footer>
+
+    <aside id="good-cart" class="cart-sidebar" role="dialog" aria-modal="true" aria-labelledby="cart-title" hidden>
+        <button id="c-close" class="nav-item" style="float:right; margin:0;" aria-label="Close cart">Close ×</button>
+        <h2 id="cart-title">Your Cart</h2>
         <ul id="cart-list" style="list-style:none; padding:0;"></ul>
-        <button class="btn" onclick="Checkout.open()">Go to Checkout</button>
+        <button class="btn" onclick="Checkout.open()">Proceed to Checkout</button>
     </aside>
 
     <div id="good-checkout" class="checkout-overlay" role="dialog" aria-modal="true" aria-labelledby="co-title" hidden>
-        <button class="btn" style="width:auto;" onclick="Checkout.close()">Back to Cart</button>
-        <form id="checkout-form" novalidate>
-            <h1 id="co-title" tabindex="-1">Checkout</h1>
-            <fieldset>
-                <legend>Shipping Information</legend>
-                <label for="fname">Full Name</label>
-                <input type="text" id="fname" autocomplete="name" required>
-            </fieldset>
-            <fieldset>
-                <legend>Payment Details</legend>
-                <label for="fcard">Card Number (16 digits)</label>
-                <input type="text" id="fcard" inputmode="numeric" autocomplete="cc-number" aria-describedby="c-err">
-                <span id="c-err" class="error-message" style="display:none;"></span>
-            </fieldset>
-            <button type="submit" class="btn">Complete Purchase</button>
-        </form>
+        <div class="checkout-wrapper">
+            <div class="checkout-main">
+                <button class="nav-item" style="margin-left:0; margin-bottom:2rem;" onclick="Checkout.close()">← Back to Cart</button>
+                <h1 id="co-title" tabindex="-1">Checkout</h1>
+                <form id="checkout-form" novalidate>
+                    <fieldset>
+                        <legend>Personal Details</legend>
+                        <label for="fname">Full Name</label>
+                        <input type="text" id="fname" autocomplete="name" aria-required="true">
+                        <span id="n-err" class="error-message" style="display:none;"></span>
+                        
+                        <label for="fcard">Card Number (16 digits)</label>
+                        <input type="text" id="fcard" inputmode="numeric" autocomplete="cc-number">
+                        <span id="c-err" class="error-message" style="display:none;"></span>
+                    </fieldset>
+                    <button type="submit" class="btn">Complete Purchase</button>
+                </form>
+            </div>
+            <aside class="checkout-summary">
+                <h2>Summary</h2>
+                <div id="summary-items" aria-live="polite"></div>
+                <div class="summary-total" style="display:flex; justify-content:space-between">
+                    <span>Total</span>
+                    <span id="good-total-val">$0</span>
+                </div>
+            </aside>
+        </div>
     </div>
 
     <script src="products.js"></script>
