@@ -15,7 +15,7 @@ document.getElementById('pause-btn').addEventListener('click', (e) => {
     paused = !paused; e.target.innerText = paused ? "Play" : "Pause";
 });
 
-// 2. Rendering
+// 2. Rendering Products
 products.forEach(p => {
     const art = document.createElement('article');
     art.className = 'card';
@@ -26,7 +26,7 @@ products.forEach(p => {
         <button class="btn" aria-label="Add ${p.name} to cart">Add to Cart</button>
     `;
     art.querySelector('button').addEventListener('click', () => {
-        cart.push(p);
+        cart.push({ ...p, instanceId: Date.now() + Math.random() }); // Unique ID for deletion
         updateUI();
         announcer.innerText = `${p.name} added. Total items: ${cart.length}`;
         Cart.open();
@@ -34,20 +34,51 @@ products.forEach(p => {
     grid.appendChild(art);
 });
 
+function removeFromCart(instanceId, name) {
+    cart = cart.filter(item => item.instanceId !== instanceId);
+    updateUI();
+    // THE WOW FACTOR: Auditory confirmation of deletion
+    announcer.innerText = `${name} removed from cart. ${cart.length} items remaining.`;
+    
+    // If cart is empty, move focus back to close button or a helpful area
+    if (cart.length === 0) {
+        document.getElementById('c-close').focus();
+    }
+}
+
 function updateUI() {
     const total = cart.reduce((s, i) => s + i.price, 0);
     document.getElementById('cart-val').innerText = `(${cart.length}) - $${total}`;
     document.getElementById('good-total-val').innerText = `$${total}`;
     
-    const listHtml = cart.map(i => `<li style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eee"><span>${i.name}</span><span>$${i.price}</span></li>`).join('');
-    document.getElementById('cart-list').innerHTML = listHtml;
-    document.getElementById('summary-items').innerHTML = listHtml;
+    // Render Cart List with Delete Buttons
+    const cartList = document.getElementById('cart-list');
+    cartList.innerHTML = ''; 
+    
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.style = "display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee";
+        li.innerHTML = `
+            <span>${item.name} - $${item.price}</span>
+            <button class="nav-item" 
+                    style="color:red; margin:0; font-size:0.8rem;" 
+                    aria-label="Remove ${item.name} from cart">
+                Remove
+            </button>
+        `;
+        li.querySelector('button').addEventListener('click', () => removeFromCart(item.instanceId, item.name));
+        cartList.appendChild(li);
+    });
+
+    // Update Summary in Checkout
+    document.getElementById('summary-items').innerHTML = cart.map(i => 
+        `<div style="display:flex; justify-content:space-between;"><span>${i.name}</span><span>$${i.price}</span></div>`
+    ).join('');
 }
 
-// 3. Form Validation with Real-time Cleanup
+// 3. Form Validation (Unchanged)
 const nIn = document.getElementById('fname'), cIn = document.getElementById('fcard');
 const nE = document.getElementById('n-err'), cE = document.getElementById('c-err');
-
 const clear = (i, e) => { i.setAttribute('aria-invalid','false'); e.style.display='none'; };
 nIn.addEventListener('input', () => { if(nIn.value.trim() !== "") clear(nIn, nE); });
 cIn.addEventListener('input', () => { if(cIn.value.replace(/\D/g,'').length === 16) clear(cIn, cE); });
@@ -64,7 +95,7 @@ document.getElementById('checkout-form').addEventListener('submit', (e) => {
     if(!err) { alert("Order Placed!"); Checkout.close(); cart = []; updateUI(); }
 });
 
-// 4. Modal/Sidebar Managers
+// 4. Modal Managers (Unchanged)
 const Cart = {
     el: document.getElementById('good-cart'),
     open() { 
